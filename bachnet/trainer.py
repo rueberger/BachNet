@@ -18,7 +18,7 @@ def train(n_seconds=30, batch_size=10, epoch_size=1000, n_epochs=1000):
     model = Model(n_time_samples)
 
     batch_generator = musicnet_generator(n_time_samples,  batch_size=batch_size,
-                                         epoch_size=epoch_size, n_epoch=n_epochs)
+                                         epoch_size=epoch_size, n_epochs=n_epochs)
 
     # epochs only in name, for now
     for train_idx, (raw_wav, discr_wav, metadata) in enumerate(batch_generator):
