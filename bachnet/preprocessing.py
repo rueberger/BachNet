@@ -1,12 +1,15 @@
 """ This module contains data preprocessing methods for BachNet"""
 
+
+import os
 import h5py
 import csv
 
 import numpy as np
 
+WORKSTATION_DATA_PATH = os.path.expanduser('~/data/musicnet')
 
-def musicnet_generator(n_time_samples, data_dir='/Volumes/ext/data/musicnet',
+def musicnet_generator(n_time_samples, data_dir=WORKSTATION_DATA_PATH,
                        batch_size=10, epoch_size=1000, n_epochs=100):
     """ Generator over MusicNet database and metadata
     """
