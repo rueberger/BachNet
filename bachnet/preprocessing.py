@@ -8,6 +8,7 @@ import csv
 import numpy as np
 
 WORKSTATION_DATA_PATH = os.path.expanduser('~/data/musicnet')
+SAMPLE_RATE = 44100
 
 def musicnet_generator(n_time_samples, data_dir=WORKSTATION_DATA_PATH,
                        batch_size=10, epoch_size=1000, n_epochs=100):
@@ -73,3 +74,21 @@ def calculate_sample_rates(data_dir=WORKSTATION_DATA_PATH):
             sample_rates.append(data_samples / float(metadata['seconds']))
 
     return np.array(sample_rates)
+
+def dump_wavs(data_dir=WORKSTATION_DATA_PATH):
+    """ Write all samples to file as wav files
+    Metadata encoded in the path, for now
+    """
+    from scipy.io.wavfile import write
+
+    metadata_dict = parse_musicnet_metadata('{}/metadata.csv'.format(data_dir))
+    data_file = '{}/data.h5'.format(data_dir)
+
+    with h5py.File(data_file) as data:
+        for sample_id, sample_metadata in metadata_dict.iteritems():
+            print("Writing sample {}".format(sample_id))
+            raw_waveform = data['id_{}'.format(sample_id)]['data'][:]
+            sample_file_name = '{}/wavs/sample_{}_{}_{}.wav'.format(data_dir, sample_id,
+                                                                    sample_metadata['composer'],
+                                                                    sample_metadata['ensemble'])
+            write(sample_file_name, SAMPLE_RATE, raw_waveform)
