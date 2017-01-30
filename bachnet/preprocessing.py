@@ -6,7 +6,7 @@ import csv
 import numpy as np
 
 
-def musicnet_generator(data_dir='/Volumes/ext/data/musicnet',
+def musicnet_generator(n_time_samples, data_dir='/Volumes/ext/data/musicnet',
                        batch_size=10, epoch_size=1000, n_epochs=100):
     """ Generator over MusicNet database and metadata
     """
@@ -18,12 +18,22 @@ def musicnet_generator(data_dir='/Volumes/ext/data/musicnet',
     with h5py.File(data_file) as data:
         for epoch_idx in range(n_epochs):
             for batch_idx in range(epoch_size):
-                row_dict = metadata_dict[batch_idx]
-                batch_id = np.random.choice(ids)
-                data_row = data['id_{}'.format(batch_id)]['data'][:]
-                row_dict['raw_wav'] = data_row
-                row_dict['discr_wav'] = discretize_waveform(data_row)
-                yield row_dict
+                batch_ids = np.random.choice(ids, size=batch_size)
+                sample_dicts = [metadata_dict[id] for id in batch_ids]
+                raw_wavs = [data['id_{}'.format(id)]['data'][:] for id in batch_ids]
+                discr_wavs = [discretize_waveform(wav) for wav in raw_wavs]
+
+                raw_wav_slices = []
+                discr_wav_slices = []
+                for raw_wav, discr_wav in zip(raw_wavs, discr_wavs):
+                    slice_idx = np.random.randint(0,  len(raw_wav) - n_time_samples - 1)
+                    raw_wav_slices.append(raw_wav[slice_idx: slice_idx + n_time_samples])
+                    discr_wav_slices.append(discr_wav[slice_idx: slice_idx + n_time_samples])
+
+                # [batch_size, n_time_samples]
+                raw_wav_batch = np.stack(raw_wav_slices)
+                discr_wav_batch = np.stack(discr_wav_slices)
+                yield raw_wav_batch, discr_wav_batch, sample_dicts
 
 
 def parse_musicnet_metadata(metadata_file):
