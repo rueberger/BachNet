@@ -72,4 +72,4 @@ def calculate_sample_rates(data_dir=WORKSTATION_DATA_PATH):
             data_samples = data['id_{}'.format(key)]['data'].shape[0]
             sample_rates.append(data_samples / float(metadata['seconds']))
 
-    return np.mean(sample_rates), np.std(sample_rates)
+    return np.array(sample_rates)
