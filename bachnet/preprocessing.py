@@ -16,7 +16,7 @@ def musicnet_generator(n_time_samples, data_dir=WORKSTATION_DATA_PATH,
     metadata_dict = parse_musicnet_metadata('{}/metadata.csv'.format(data_dir))
     data_file = '{}/data.h5'.format(data_dir)
 
-    ids = np.array(metadata_dict)
+    ids = np.array(metadata_dict.keys())
 
     with h5py.File(data_file) as data:
         for epoch_idx in range(n_epochs):
