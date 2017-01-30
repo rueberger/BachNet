@@ -69,7 +69,7 @@ def calculate_sample_rates(data_dir=WORKSTATION_DATA_PATH):
 
     with h5py.File(data_file) as data:
         for key, metadata in metadata_dict.iteritems():
-            raw_wav = data['id_{}'.format(key)]['data'][:]
-            sample_rates.append(len(raw_wav) / float(metadata['seconds']))
+            data_samples = data['id_{}'.format(key)]['data'].shape[0]
+            sample_rates.append(data_samples / float(metadata['seconds']))
 
     return np.mean(sample_rates), np.std(sample_rates)
