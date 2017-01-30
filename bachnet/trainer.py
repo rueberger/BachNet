@@ -1,4 +1,30 @@
 """ This module contains methods for training the model
 """
 
-from wavenet.
+import time
+
+from bachnet.preprocessing import musicnet_generator
+from wavenet.models import Model
+
+
+SAMPLE_RATE = 441000
+
+
+def train(n_seconds=30, batch_size=10, epoch_size=1000, n_epochs=1000):
+    """ Train a model on n_seconds patches
+    """
+    n_time_samples = SAMPLE_RATE * n_seconds
+
+    model = Model(n_time_samples)
+
+    batch_generator = musicnet_generator(n_time_samples,  batch_size=batch_size,
+                                         epoch_size=epoch_size, n_epoch=n_epochs)
+
+    # epochs only in name, for now
+    for train_idx, (raw_wav, discr_wav, metadata) in enumerate(batch_generator):
+        st_time = time.time()
+        loss = model._train(raw_wav, discr_wav)
+        end_time = time.time()
+
+        if train_idx % epoch_size:
+            print("Achieved loss of {}. Training took {}".format(loss, end_time - st_time))
