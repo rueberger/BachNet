@@ -85,7 +85,7 @@ def dump_wavs(data_dir=WORKSTATION_DATA_PATH):
     data_file = '{}/data.h5'.format(data_dir)
 
     with h5py.File(data_file) as data:
-        for sample_id, sample_metadata in metadata_dict.iteritems():
+        for sample_id, sample_metadata in metadata_dict.items():
             print("Writing sample {}".format(sample_id))
             raw_waveform = data['id_{}'.format(sample_id)]['data'][:]
             sample_file_name = '{}/wavs/sample_{}_{}_{}.wav'.format(data_dir, sample_id,
