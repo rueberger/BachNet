@@ -60,3 +60,16 @@ def discretize_waveform(waveform):
     norm_waveform = (((np.float32(waveform) - np.min(waveform)) / np.max(waveform)) - 0.5) * 2
     d_waveform = (np.digitize(norm_waveform, bins) - 1).astype(int)
     return d_waveform
+
+def calculate_sample_rates(data_dir=WORKSTATION_DATA_PATH):
+    metadata_dict = parse_musicnet_metadata('{}/metadata.csv'.format(data_dir))
+    data_file = '{}/data.h5'.format(data_dir)
+
+    sample_rates = []
+
+    with h5py.File(data_file) as data:
+        for key, metadata in metadata_dict.iteritems():
+            raw_wav = data['id_{}'.format(key)]['data'][:]
+            sample_rates.append(len(raw_wav) / float(metadata['seconds']))
+
+    return np.mean(sample_rates), np.std(sample_rates)
