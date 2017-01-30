@@ -7,7 +7,7 @@ from bachnet.preprocessing import musicnet_generator
 from wavenet.models import Model
 
 
-SAMPLE_RATE = 441000
+SAMPLE_RATE = 44100
 
 
 def train(n_seconds=30, batch_size=10, epoch_size=1000, n_epochs=1000):
