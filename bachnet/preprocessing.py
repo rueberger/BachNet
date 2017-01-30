@@ -34,7 +34,7 @@ def musicnet_generator(n_time_samples, data_dir=WORKSTATION_DATA_PATH,
                     discr_wav_slices.append(discr_wav[slice_idx: slice_idx + n_time_samples])
 
                 # [batch_size, n_time_samples]
-                raw_wav_batch = np.stack(raw_wav_slices)
+                raw_wav_batch = np.stack(raw_wav_slices).reshape(-1, n_time_samples, 1)
                 discr_wav_batch = np.stack(discr_wav_slices)
                 yield raw_wav_batch, discr_wav_batch, sample_dicts
 
