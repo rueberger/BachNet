@@ -2,6 +2,8 @@
 
 A generative model of Bach's music
 
+Work in progress.
+
 
 # References
 
